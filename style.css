@@ -14,7 +14,7 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: #ffcca1;
+    background-color: #eed6c3;
     padding: 0 10px;
 }
 
@@ -50,6 +50,16 @@ body {
     cursor: pointer;
     overflow: hidden;
     white-space: nowrap;
+    scroll-behavior: smooth;
+}
+
+.carousel.dragging {
+    cursor: grab;
+    scroll-behavior: auto;
+}
+
+.carousel.dragging img {
+
 }
 
 .carousel img {
