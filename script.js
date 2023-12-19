@@ -7,28 +7,35 @@ let isDragStart = false, prevPageX, prevScrollLeft;
 let firstImgWidth = firstImg.clientWidth + 14; 
     // getting first img width & adding 14 margin value
 
+let scrollWidth = carousel.scrollWidth - carousel.clientWidth; 
+    // getting max scrollable width.
+
 const showHideIcons = () => {
+        // showing and hiding prev/next icon according to carousel scroll left value.
+
     arrowIcons[0].style.display = carousel.scrollLeft == 0 ? 'none' : 'block';
 
         // this means:
         // if(carousel.scrollLeft == 0) {
         //     arrowIcons[0].style.display = 'none';
-        // } else {
+        // } else { 
         //     arrowIcons[0].style.display = 'block';
         // }
+
+    arrowIcons[1].style.display = carousel.scrollLeft == scrollWidth ? 'none' : 'block';
 }
 
 arrowIcons.forEach(icon => {
     icon.addEventListener('click', () => { 
         carousel.scrollLeft += icon.id == 'left' ? -firstImgWidth : firstImgWidth;
-        showHideIcons();
+        setTimeout(()=> showHideIcons(), 60); // calling showHideIcons after 60ms.
     });
 })
 
 const dragStart = (e) => {
         //updating global variables values on mouse down event.
     isDragStart = true;
-    prevPageX = e.pageX;
+    prevPageX = e.pageX || e.touches[0].pageX;
     prevScrollLeft = carousel.scrollLeft;
 }
 
@@ -37,9 +44,9 @@ const dragging = (e) => {
     if(!isDragStart) return;
     e.preventDefault();
     carousel.classList.add('dragging')
-    let positionDiff = e.pageX - prevPageX;
+    let positionDiff = (e.pageX || e.touches[0].pageX) - prevPageX;
     carousel.scrollLeft = prevScrollLeft - positionDiff;
-    console.log(e.pageX)
+    showHideIcons()
 }
 
 const dragStop = () => {
@@ -50,3 +57,10 @@ const dragStop = () => {
 carousel.addEventListener('mousedown', dragStart);
 carousel.addEventListener('mousemove', dragging);
 carousel.addEventListener('mouseup', dragStop);
+carousel.addEventListener('mouseleave', dragStop);
+
+// MOBILE FRIENDLY //
+
+carousel.addEventListener('touchstart', dragStart);
+carousel.addEventListener('touchmove', dragging);
+carousel.addEventListener('touchend', dragStop);
